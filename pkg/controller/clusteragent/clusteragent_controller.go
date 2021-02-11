@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"k8s.io/apimachinery/pkg/api/resource"
 	"strconv"
 	"strings"
 
@@ -44,6 +45,7 @@ const (
 	BLOCKLISTED                 string = "blocklisted"
 
 	ENV_INSTRUMENTATION     string = "Env"
+	MATCH_ALL_REGEX         string = ".*"
 	NO_INSTRUMENTATION             = "None"
 	JAVA_LANGUAGE           string = "java"
 	DOTNET_LANGUAGE         string = "dotnetcore"
@@ -631,6 +633,20 @@ func (r *ReconcileClusteragent) newAgentDeployment(clusterAgent *appdynamicsv1al
 		secretName = clusterAgent.Spec.AccessSecret
 	}
 
+	resLimit := corev1.ResourceList{}
+	resLimit[corev1.ResourceCPU] = resource.MustParse("1250m")
+	resLimit[corev1.ResourceMemory] = resource.MustParse("300Mi")
+
+	resRequest := corev1.ResourceList{}
+	resRequest[corev1.ResourceCPU] = resource.MustParse("750m")
+	resRequest[corev1.ResourceMemory] = resource.MustParse("150Mi")
+
+	resRequirements := corev1.ResourceRequirements{Requests: resRequest, Limits: resLimit}
+
+	if len(clusterAgent.Spec.Resources.Limits) == 0 && len(clusterAgent.Spec.Resources.Requests) == 0 {
+		clusterAgent.Spec.Resources = resRequirements
+	}
+
 	fmt.Printf("Building deployment spec for image %s\n", clusterAgent.Spec.Image)
 	ls := labelsForClusteragent(clusterAgent)
 	var replicas int32 = 1
@@ -771,7 +787,7 @@ func (r *ReconcileClusteragent) newAgentDeployment(clusterAgent *appdynamicsv1al
 	}
 
 	customSSLSecret := corev1.EnvVar{
-		Name: "APPDYNAMICS_CUSTOM_SSL_SECRET",
+		Name:  "APPDYNAMICS_CUSTOM_SSL_SECRET",
 		Value: clusterAgent.Spec.CustomSSLSecret,
 	}
 	dep.Spec.Template.Spec.Containers[0].Env = append(dep.Spec.Template.Spec.Containers[0].Env, customSSLSecret)
@@ -911,6 +927,10 @@ func setInstrumentationAgentDefaults(clusterAgent *appdynamicsv1alpha1.Clusterag
 		}
 	}
 
+	if clusterAgent.Spec.DefaultInstrumentMatchString == "" {
+		clusterAgent.Spec.DefaultInstrumentMatchString = MATCH_ALL_REGEX
+	}
+
 	if clusterAgent.Spec.DefaultInstrumentationTech == "" {
 		clusterAgent.Spec.DefaultInstrumentationTech = JAVA_LANGUAGE
 	}
@@ -948,8 +968,12 @@ func setInstrumentationRuleDefault(clusterAgent *appdynamicsv1alpha1.Clusteragen
 			clusterAgent.Spec.InstrumentationRules[i].EnvToUse = clusterAgent.Spec.DefaultEnv
 		}
 
-		if clusterAgent.Spec.InstrumentationRules[i].LabelMatch == nil {
-			clusterAgent.Spec.InstrumentationRules[i].LabelMatch = make([]map[string]string, 0)
+		if len(clusterAgent.Spec.InstrumentationRules[i].LabelMatch) == 0 {
+			clusterAgent.Spec.InstrumentationRules[i].LabelMatch = clusterAgent.Spec.DefaultLabelMatch
+		}
+
+		if clusterAgent.Spec.InstrumentationRules[i].MatchString == "" {
+			clusterAgent.Spec.InstrumentationRules[i].MatchString = clusterAgent.Spec.DefaultInstrumentMatchString
 		}
 
 		if clusterAgent.Spec.InstrumentationRules[i].Language == "" {
@@ -1174,8 +1198,8 @@ func customAgentConfigsToArrayMap(customConfigs []appdynamicsv1alpha1.CustomConf
 	out := make([]map[string]string, 0)
 	for _, customConfig := range customConfigs {
 		out = append(out, map[string]string{
-			"config-map-name":      customConfig.ConfigMapName,
-			"sub-dir":              customConfig.SubDir,
+			"config-map-name": customConfig.ConfigMapName,
+			"sub-dir":         customConfig.SubDir,
 		})
 	}
 	return out

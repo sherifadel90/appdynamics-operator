@@ -405,7 +405,7 @@ func (r *ReconcileInfraViz) validate(infraViz *appdynamicsv1alpha1.InfraViz, exi
 	}
 
 	if infraViz.Spec.EnableDockerViz == "" {
-		infraViz.Spec.EnableDockerViz = "true"
+		infraViz.Spec.EnableDockerViz = "false"
 	}
 
 	if !create {
@@ -844,7 +844,7 @@ func (r *ReconcileInfraViz) newPodSpecForCR(infraViz *appdynamicsv1alpha1.InfraV
 	}
 
 	if isWindows == false && infraViz.Spec.EnableDockerViz == "" {
-		infraViz.Spec.EnableDockerViz = "true"
+		infraViz.Spec.EnableDockerViz = "false"
 	}
 
 	var dockerVol corev1.Volume

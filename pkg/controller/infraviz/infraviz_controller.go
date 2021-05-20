@@ -895,6 +895,10 @@ func (r *ReconcileInfraViz) newPodSpecForCR(infraViz *appdynamicsv1alpha1.InfraV
 		resLimit[corev1.ResourceMemory] = resource.MustParse("300Mi")
 		reqs := corev1.ResourceRequirements{Requests: resRequest, Limits: resLimit}
 
+		if len(infraViz.Spec.ResourcesNetViz.Limits) != 0 || len(infraViz.Spec.ResourcesNetViz.Requests) != 0 {
+			reqs = infraViz.Spec.ResourcesNetViz
+		}
+
 		netVizVolume := corev1.Volume{Name: "netviz-volume",
 			VolumeSource: corev1.VolumeSource{
 				ConfigMap: &corev1.ConfigMapVolumeSource{

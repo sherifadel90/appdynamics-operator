@@ -820,6 +820,7 @@ func (in *InfraVizSpec) DeepCopyInto(out *InfraVizSpec) {
 		copy(*out, *in)
 	}
 	in.Resources.DeepCopyInto(&out.Resources)
+	in.ResourcesNetViz.DeepCopyInto(&out.ResourcesNetViz)
 	return
 }
 

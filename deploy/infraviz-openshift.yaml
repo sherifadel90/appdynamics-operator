@@ -98,6 +98,6 @@ spec:
   account: "customer1"
   globalAccount: "customer1_4057dd4"
   netVizPort: 3892
-  enableDockerViz: "false"
+  enableDockerViz: false
   enableMasters: true
   stdoutLogging: false

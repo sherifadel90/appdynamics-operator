@@ -159,13 +159,13 @@ Updates to the infraViz with different `nodeOS` values is transparent. For examp
 | `account`                 |  AppDynamics Account Name                                    |       Required             |
 | `globalAccount`          |  Global Account Name                            |     Required  |
 | `eventServiceUrl`   | Event Service Endpoint | Optional |
-| `enableContainerHostId` | Flag that determines how container names are derived (pod name vs container id) | "true" |
-| `enableServerViz` |  Enable Server Visibility | "true" |
-| `enableDockerViz` | Enable Docker Container Visibiltiy | "true" |
+| `enableContainerHostId` | Flag that determines how container names are derived (pod name vs container id) | true |
+| `enableServerViz` |  Enable Server Visibility | true |
+| `enableDockerViz` | Enable Docker Container Visibiltiy | true |
 | `uniqueHostId` | Unique host ID in AppDynamics. | Optional. If not provided, the operator will set the value to `spec.nodeName`. Valid options: `spec.nodeName`, `status.hostIP` |
 | `metricsLimit` | Number of metrics that the Machine Agent is allowed to post to the controller | Optional |
 | `logLevel`	| Logging level (`info` or `debug`) | `info` |
-| `stdoutLogging` | Determines if the logs are saved to a file or redirected to the console | "false" |
+| `stdoutLogging` | Determines if the logs are saved to a file or redirected to the console | false |
 | `syslogPort` | The embedded analytics agent uses this host port to ingest syslog messages. The port is not set by default. When required, the recommended value is 5144 or based on the port availability on the host | Optional |
 | `netVizPort` | When > 0, the network visibility agent will be deployed in a sidecar along with the machine agent. By default the network visibility agent works with port `3892` | Not set by default |
 | `netVizImage` | Reference of the Network Agent image | "appdynamics/machine-agent-netviz:latest"
@@ -212,7 +212,7 @@ spec:
   image: docker.io/appdynamics/machine-agent-analytics:latest  //default
   account: customer1
   globalAccount: customer1_f1d654a0-5
-  enableDockerViz: "true"
+  enableDockerViz: true
   enableMasters: true                                       // will deploy to master nodes too, if possible
   stdoutLogging: true                                       // log to console
   nodeSelector:
@@ -240,7 +240,7 @@ spec:
   image: appdynamics/machine-agent-analytics:latest         
   account: customer1
   globalAccount: customer1_f1d654a0-5
-  enableDockerViz: "true"
+  enableDockerViz: true
   enableMasters: true                                       
   stdoutLogging: true                                       
   netVizImage: appdynamics/machine-agent-netviz:latest      // by default
@@ -270,7 +270,7 @@ spec:
   image: appdynamics/machine-agent-analytics:latest         
   account: customer1
   globalAccount: customer1_f1d654a0-5
-  enableDockerViz: "true"
+  enableDockerViz: true
   enableMasters: true                                       
   stdoutLogging: true                                       
   syslogPort: 5144
@@ -353,7 +353,7 @@ spec:
   image: docker.io/appdynamics/machine-agent-analytics:latest
   account: customer1
   globalAccount: customer1_f1d654a0-5
-  enableDockerViz: "true"
+  enableDockerViz: true
   enableMasters: true                                 
   stdoutLogging: true                                 
   nodeSelector:

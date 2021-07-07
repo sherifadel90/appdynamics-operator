@@ -8,5 +8,5 @@ spec:
   account: "customer1"
   globalAccount: "customer2_f48ef359"
   netVizPort: 3892
-  enableDockerViz: "true"
+  enableDockerViz: true
   stdoutLogging: true

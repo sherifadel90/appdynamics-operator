@@ -18,9 +18,9 @@ type InfraVizSpec struct {
 	AccessSecret          string                      `json:"accessSecret,omitempty"`
 	GlobalAccount         string                      `json:"globalAccount,omitempty"`
 	EventServiceUrl       string                      `json:"eventServiceUrl,omitempty"`
-	EnableContainerHostId string                      `json:"enableContainerHostId,omitempty"`
-	EnableDockerViz       string                      `json:"enableDockerViz,omitempty"`
-	EnableServerViz       string                      `json:"enableServerViz,omitempty"`
+	EnableContainerHostId bool                        `json:"enableContainerHostId,omitempty"`
+	EnableDockerViz       bool                        `json:"enableDockerViz,omitempty"`
+	EnableServerViz       bool                        `json:"enableServerViz,omitempty"`
 	EnableMasters         bool                        `json:"enableMasters,omitempty"`
 	UniqueHostId          string                      `json:"uniqueHostId,omitempty"`
 	MetricsLimit          string                      `json:"metricsLimit,omitempty"`

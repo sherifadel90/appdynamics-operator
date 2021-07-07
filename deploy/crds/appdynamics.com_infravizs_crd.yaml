@@ -47,13 +47,13 @@ spec:
             controllerUrl:
               type: string
             enableContainerHostId:
-              type: string
+              type: boolean
             enableDockerViz:
-              type: string
+              type: boolean
             enableMasters:
               type: boolean
             enableServerViz:
-              type: string
+              type: boolean
             env:
               items:
                 description: EnvVar represents an environment variable present in

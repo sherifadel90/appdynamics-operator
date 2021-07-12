@@ -159,9 +159,9 @@ Updates to the infraViz with different `nodeOS` values is transparent. For examp
 | `account`                 |  AppDynamics Account Name                                    |       Required             |
 | `globalAccount`          |  Global Account Name                            |     Required  |
 | `eventServiceUrl`   | Event Service Endpoint | Optional |
-| `enableContainerHostId` | Flag that determines how container names are derived (pod name vs container id) | true |
-| `enableServerViz` |  Enable Server Visibility | true |
-| `enableDockerViz` | Enable Docker Container Visibiltiy | true |
+| `enableContainerHostId` | Flag that determines how container names are derived (pod name vs container id) | false |
+| `enableServerViz` |  Enable Server Visibility | false |
+| `enableDockerViz` | Enable Docker Container Visibiltiy | false |
 | `uniqueHostId` | Unique host ID in AppDynamics. | Optional. If not provided, the operator will set the value to `spec.nodeName`. Valid options: `spec.nodeName`, `status.hostIP` |
 | `metricsLimit` | Number of metrics that the Machine Agent is allowed to post to the controller | Optional |
 | `logLevel`	| Logging level (`info` or `debug`) | `info` |
@@ -212,6 +212,8 @@ spec:
   image: docker.io/appdynamics/machine-agent-analytics:latest  //default
   account: customer1
   globalAccount: customer1_f1d654a0-5
+  enableContainerHostId: true
+  enableServerViz: true
   enableDockerViz: true
   enableMasters: true                                       // will deploy to master nodes too, if possible
   stdoutLogging: true                                       // log to console
@@ -240,6 +242,8 @@ spec:
   image: appdynamics/machine-agent-analytics:latest         
   account: customer1
   globalAccount: customer1_f1d654a0-5
+  enableContainerHostId: true
+  enableServerViz: true
   enableDockerViz: true
   enableMasters: true                                       
   stdoutLogging: true                                       
@@ -270,6 +274,8 @@ spec:
   image: appdynamics/machine-agent-analytics:latest         
   account: customer1
   globalAccount: customer1_f1d654a0-5
+  enableContainerHostId: true
+  enableServerViz: true
   enableDockerViz: true
   enableMasters: true                                       
   stdoutLogging: true                                       
@@ -301,6 +307,8 @@ spec:
   globalAccount: customer1_f1d654a0-5
   imageWin: docker.io/appdynamics/machine-agent-analytics:20.6.0-win-ltsc2019  
   nodeOS: windows
+  enableContainerHostId: true
+  enableServerViz: true
   enableMasters: false                                 
   stdoutLogging: true                                 
   resources:
@@ -328,6 +336,8 @@ spec:
   image: "docker.io/appdynamics/machine-agent-analytics:latest"
   imageWin: docker.io/appdynamics/machine-agent-analytics:20.6.0-win-ltsc2019  
   nodeOS: all
+  enableContainerHostId: true
+  enableServerViz: true
   enableMasters: true                                 
   stdoutLogging: true                                 
   resources:
@@ -353,6 +363,8 @@ spec:
   image: docker.io/appdynamics/machine-agent-analytics:latest
   account: customer1
   globalAccount: customer1_f1d654a0-5
+  enableContainerHostId: true
+  enableServerViz: true
   enableDockerViz: true
   enableMasters: true                                 
   stdoutLogging: true                                 

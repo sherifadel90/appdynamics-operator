@@ -396,14 +396,6 @@ func (r *ReconcileInfraViz) validate(infraViz *appdynamicsv1alpha1.InfraViz, exi
 		return breakingChanges, fmt.Errorf("Failed to load configMap %s. %v", cmName, err)
 	}
 
-	if !infraViz.Spec.EnableContainerHostId {
-		infraViz.Spec.EnableContainerHostId = true
-	}
-
-	if !infraViz.Spec.EnableServerViz {
-		infraViz.Spec.EnableServerViz = true
-	}
-
 	if !create {
 		if !newDS {
 			if logConfigRequired {
@@ -644,10 +636,6 @@ func (r *ReconcileInfraViz) newPodSpecForCR(infraViz *appdynamicsv1alpha1.InfraV
 		infraViz.Spec.NetVizImage = "appdynamics/machine-agent-netviz:latest"
 	}
 
-	if !infraViz.Spec.EnableContainerHostId {
-		infraViz.Spec.EnableContainerHostId = true
-	}
-
 	if r.addNodeSelector {
 		if infraViz.Spec.NodeSelector == nil {
 			infraViz.Spec.NodeSelector = make(map[string]string)
@@ -839,12 +827,12 @@ func (r *ReconcileInfraViz) newPodSpecForCR(infraViz *appdynamicsv1alpha1.InfraV
 		}
 	}
 
-	if isWindows == false && !infraViz.Spec.EnableDockerViz {
+	if !isWindows {
 		infraViz.Spec.EnableDockerViz = false
 	}
 
 	var dockerVol corev1.Volume
-	if isWindows == false && infraViz.Spec.EnableDockerViz == true {
+	if !isWindows && infraViz.Spec.EnableDockerViz {
 		if infraViz.Spec.Pks {
 			dockerVol = corev1.Volume{
 				Name: "docker-sock",

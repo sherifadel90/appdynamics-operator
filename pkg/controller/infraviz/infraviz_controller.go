@@ -396,18 +396,6 @@ func (r *ReconcileInfraViz) validate(infraViz *appdynamicsv1alpha1.InfraViz, exi
 		return breakingChanges, fmt.Errorf("Failed to load configMap %s. %v", cmName, err)
 	}
 
-	if infraViz.Spec.EnableContainerHostId == "" {
-		infraViz.Spec.EnableContainerHostId = "true"
-	}
-
-	if infraViz.Spec.EnableServerViz == "" {
-		infraViz.Spec.EnableServerViz = "true"
-	}
-
-	if infraViz.Spec.EnableDockerViz == "" {
-		infraViz.Spec.EnableDockerViz = "false"
-	}
-
 	if !create {
 		if !newDS {
 			if logConfigRequired {
@@ -476,11 +464,11 @@ func (r *ReconcileInfraViz) validate(infraViz *appdynamicsv1alpha1.InfraViz, exi
 	cm.Data["APPDYNAMICS_SYSLOG_PORT"] = strconv.Itoa(int(infraViz.Spec.SyslogPort))
 	cm.Data["APPDYNAMICS_WIN_IMAGE"] = infraViz.Spec.ImageWin
 
-	cm.Data["APPDYNAMICS_AGENT_ENABLE_CONTAINERIDASHOSTID"] = infraViz.Spec.EnableContainerHostId
+	cm.Data["APPDYNAMICS_AGENT_ENABLE_CONTAINERIDASHOSTID"] = strconv.FormatBool(infraViz.Spec.EnableContainerHostId)
 
-	cm.Data["APPDYNAMICS_SIM_ENABLED"] = infraViz.Spec.EnableServerViz
+	cm.Data["APPDYNAMICS_SIM_ENABLED"] = strconv.FormatBool(infraViz.Spec.EnableServerViz)
 
-	cm.Data["APPDYNAMICS_DOCKER_ENABLED"] = infraViz.Spec.EnableDockerViz
+	cm.Data["APPDYNAMICS_DOCKER_ENABLED"] = strconv.FormatBool(infraViz.Spec.EnableDockerViz)
 
 	cm.Data["EVENT_ENDPOINT"] = eventUrl
 	cm.Data["APPDYNAMICS_AGENT_PROXY_HOST"] = proxyHost
@@ -646,10 +634,6 @@ func (r *ReconcileInfraViz) newPodSpecForCR(infraViz *appdynamicsv1alpha1.InfraV
 
 	if infraViz.Spec.NetVizImage == "" {
 		infraViz.Spec.NetVizImage = "appdynamics/machine-agent-netviz:latest"
-	}
-
-	if infraViz.Spec.EnableContainerHostId == "" {
-		infraViz.Spec.EnableContainerHostId = "true"
 	}
 
 	if r.addNodeSelector {
@@ -843,12 +827,8 @@ func (r *ReconcileInfraViz) newPodSpecForCR(infraViz *appdynamicsv1alpha1.InfraV
 		}
 	}
 
-	if isWindows == false && infraViz.Spec.EnableDockerViz == "" {
-		infraViz.Spec.EnableDockerViz = "false"
-	}
-
 	var dockerVol corev1.Volume
-	if isWindows == false && infraViz.Spec.EnableDockerViz == "true" {
+	if !isWindows && infraViz.Spec.EnableDockerViz {
 		if infraViz.Spec.Pks {
 			dockerVol = corev1.Volume{
 				Name: "docker-sock",

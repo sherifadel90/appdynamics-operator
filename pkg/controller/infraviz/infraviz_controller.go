@@ -827,10 +827,6 @@ func (r *ReconcileInfraViz) newPodSpecForCR(infraViz *appdynamicsv1alpha1.InfraV
 		}
 	}
 
-	if !isWindows {
-		infraViz.Spec.EnableDockerViz = false
-	}
-
 	var dockerVol corev1.Volume
 	if !isWindows && infraViz.Spec.EnableDockerViz {
 		if infraViz.Spec.Pks {

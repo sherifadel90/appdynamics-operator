@@ -876,7 +876,11 @@ func (r *ReconcileClusteragent) restartAgent(clusterAgent *appdynamicsv1alpha1.C
 }
 
 func labelsForClusteragent(clusterAgent *appdynamicsv1alpha1.Clusteragent) map[string]string {
-	return map[string]string{"name": "clusterAgent", "clusterAgent_cr": clusterAgent.Name}
+	labels := map[string]string{"name": "clusterAgent", "clusterAgent_cr": clusterAgent.Name}
+	for key, value := range clusterAgent.Spec.Labels {
+		labels[key] = value
+	}
+	return labels
 }
 
 func setInstrumentationAgentDefaults(clusterAgent *appdynamicsv1alpha1.Clusteragent) {

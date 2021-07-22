@@ -454,6 +454,13 @@ func (in *ClusteragentSpec) DeepCopyInto(out *ClusteragentSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Labels != nil {
+		in, out := &in.Labels, &out.Labels
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	if in.InstrumentMatchString != nil {
 		in, out := &in.InstrumentMatchString, &out.InstrumentMatchString
 		*out = make([]string, len(*in))

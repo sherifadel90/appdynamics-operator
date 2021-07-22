@@ -58,6 +58,7 @@ type ClusteragentSpec struct {
 	MaxPodLogsTailLinesCount              int    `json:"maxPodLogsTailLinesCount,omitempty"`
 
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
+	Labels      map[string]string   `json:"labels,omitempty"`
 
 	//instrumentation
 	InstrumentationMethod        string                `json:"instrumentationMethod,omitempty"`
@@ -180,9 +181,10 @@ type ImageInfo struct {
 }
 
 type CustomConfigInfo struct {
-	ConfigMapName   string `json:"configMapName"`
-   SubDir          string `json:"subDir"`
+	ConfigMapName string `json:"configMapName"`
+	SubDir        string `json:"subDir"`
 }
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ClusteragentList contains a list of Clusteragent
@@ -211,7 +213,7 @@ type InstrumentationRule struct {
 	AnalyticsHost            string              `json:"analyticsHost,omitempty"`
 	AnalyticsPort            int                 `json:"analyticsPort,omitempty"`
 	AnalyticsSslEnabled      bool                `json:"analyticsSslEnabled,omitempty"`
-	CustomConfigInfo         []CustomConfigInfo `json:"customAgentConfigSource,omitempty"`
+	CustomConfigInfo         []CustomConfigInfo  `json:"customAgentConfigSource,omitempty"`
 }
 
 func init() {

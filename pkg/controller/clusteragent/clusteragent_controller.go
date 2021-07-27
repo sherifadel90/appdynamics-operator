@@ -59,6 +59,8 @@ const (
 	JAVA_TOOL_OPTIONS              = "JAVA_TOOL_OPTIONS"
 	FIRST                          = "first"
 	MANUAL_APPNAME_STRATEGY        = "manual"
+
+	pod_template_hash_label = "pod-template-hash"
 )
 
 // Add creates a new Clusteragent Controller and adds it to the Manager. The Manager will set fields on the Controller
@@ -876,7 +878,16 @@ func (r *ReconcileClusteragent) restartAgent(clusterAgent *appdynamicsv1alpha1.C
 }
 
 func labelsForClusteragent(clusterAgent *appdynamicsv1alpha1.Clusteragent) map[string]string {
-	return map[string]string{"name": "clusterAgent", "clusterAgent_cr": clusterAgent.Name}
+	labels := make(map[string]string)
+	for key, value := range clusterAgent.Spec.Labels {
+		if key != pod_template_hash_label {
+			labels[key] = value
+		}
+	}
+
+	labels["name"] = "clusterAgent"
+	labels["clusterAgent_cr"] = clusterAgent.Name
+	return labels
 }
 
 func setInstrumentationAgentDefaults(clusterAgent *appdynamicsv1alpha1.Clusteragent) {

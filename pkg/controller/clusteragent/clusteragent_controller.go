@@ -464,11 +464,11 @@ pod-filter: %s`, clusterAgent.Spec.MetricsSyncInterval, clusterAgent.Spec.Cluste
 
 	if clusterAgent.Spec.NsToMonitorRegex != "" {
 		yml = fmt.Sprintf(`%s
-ns-to-monitor-regex: %s`, yml, clusterAgent.Spec.NsToMonitorRegex)
+ns-to-monitor-regex: %s`, yml, strconv.Quote(clusterAgent.Spec.NsToMonitorRegex))
 	}
 	if clusterAgent.Spec.NsToExcludeRegex != "" {
 		yml = fmt.Sprintf(`%s
-ns-to-exclude-regex: %s`, yml, clusterAgent.Spec.NsToExcludeRegex)
+ns-to-exclude-regex: %s`, yml, strconv.Quote(clusterAgent.Spec.NsToExcludeRegex))
 	}
 
 	cm := &corev1.ConfigMap{}
@@ -526,7 +526,7 @@ default-analytics-port: %d
 default-analytics-ssl-enabled: %t
 instrumentation-rules: %v`, clusterAgent.Spec.InstrumentationMethod, clusterAgent.Spec.DefaultInstrumentMatchString,
 		mapToJsonString(clusterAgent.Spec.DefaultLabelMatch), imageInfoMapToJsonString(clusterAgent.Spec.ImageInfoMap), clusterAgent.Spec.DefaultInstrumentationTech,
-		clusterAgent.Spec.NsToInstrumentRegex, strings.Join(clusterAgent.Spec.ResourcesToInstrument, ","), clusterAgent.Spec.DefaultEnv,
+		strconv.Quote(clusterAgent.Spec.NsToInstrumentRegex), strings.Join(clusterAgent.Spec.ResourcesToInstrument, ","), clusterAgent.Spec.DefaultEnv,
 		clusterAgent.Spec.DefaultCustomConfig, clusterAgent.Spec.DefaultAppName, clusterAgent.Spec.AppNameLabel, clusterAgent.Spec.InstrumentContainer,
 		clusterAgent.Spec.DefaultContainerMatchString, netvizInfoToJsonString(clusterAgent.Spec.NetvizInfo), clusterAgent.Spec.RunAsUser, clusterAgent.Spec.RunAsGroup,
 		clusterAgent.Spec.AppNameStrategy, clusterAgent.Spec.NumberOfTaskWorkers, clusterAgent.Spec.DefaultAnalyticsHost, clusterAgent.Spec.DefaultAnalyticsPort, clusterAgent.Spec.DefaultAnalyticsSslEnabled, instrumentationRulesToJsonString(clusterAgent.Spec.InstrumentationRules))
